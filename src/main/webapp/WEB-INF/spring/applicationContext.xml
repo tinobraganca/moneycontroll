@@ -51,6 +51,7 @@
         <property name="annotatedClasses">
             <array>
                 <value>br.com.software.modelos.Cartao</value>
+                <value>br.com.software.modelos.Transacao</value>
             </array>
         </property>
         

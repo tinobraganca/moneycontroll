@@ -12,7 +12,7 @@ import br.com.software.modelos.Cartao;
 
 
 @Repository("cartao")
-public class CartaoDao {
+public class CartaoDao extends HibernateDao<Cartao> {
 
 	protected Class getClazz() {
 		return Cartao.class;
