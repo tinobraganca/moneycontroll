@@ -48,18 +48,18 @@
             </props>
         </property>
         
-<!--         <property name="annotatedClasses"> -->
-<!--             <array> -->
-<!--                 <value>br.com.software.dao.Cartao</value> -->
-<!--             </array> -->
-<!--         </property> -->
-        
-        
-        <property name="annotatedPackages">
-            <list>
-                <value>br.com.software.dao.Cartao</value>
-            </list>
+        <property name="annotatedClasses">
+            <array>
+                <value>br.com.software.modelos.Cartao</value>
+            </array>
         </property>
+        
+        
+<!--         <property name="annotatedPackages"> -->
+<!--             <list> -->
+<!--                 <value>br.com.software.dao.Cartao</value> -->
+<!--             </list> -->
+<!--         </property> -->
     </bean>
     
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
@@ -76,7 +76,7 @@
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
     
-    <context:component-scan base-package="br.com.software.dao" />
+    <context:component-scan base-package="br.com.software" />
     
 </beans>
 

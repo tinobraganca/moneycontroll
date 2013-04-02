@@ -27,7 +27,7 @@
 		<form:form action="${url}" method="POST" modelAttribute="cadCartao">
 			<div>
 				<label for="cartao">Tipo cartao:</label>
-				<form:input cssStyle="width:250px" maxlength="30" path="cartao" size="30" />
+				<form:input cssStyle="width:250px" maxlength="30" path="nome" size="30" />
 				<input type="submit" value="Criar Contato" />
 			</form:form> 
 			</div>
