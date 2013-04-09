@@ -22,7 +22,7 @@
 <body>
 	<div id="boxcenter">
 		<c:url var="url" value="" />
-		<form:form action="${url}" method="POST" modelAttribute="transacao">
+		<form:form action="/grud/transacao/" method="POST" modelAttribute="transacao">
 
 			<div>
 				<label for="data">Data:</label>
@@ -39,13 +39,11 @@
 				<form:input cssStyle="width:250px" maxlength="30" path="descricao"
 					size="30" />
 			</div>
-			<select name="cartaoId">
-				<c:forEach items="${cartoes}" var="car">
-					<option value="${cartoes.id}">${cartoes.name}</option>
-				</c:forEach>
-			</select>
+					<form:select path="cartao.id">
+						<form:options items="${cartoes}" itemValue="id" itemLabel="nome" />
+					</form:select>
 			<div class="submit">
-				<form:input type="submit" value="Criar Contato" />
+				<input type="submit" value="Criar Contato" />
 			</div>
 			
 		</form:form>

@@ -2,19 +2,15 @@ package br.com.software.modelos;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,7 +23,7 @@ import org.springframework.format.annotation.NumberFormat;
 import org.springframework.format.annotation.NumberFormat.Style;
 
 @Entity
-@Table(name = "Transacao")
+@Table(name = "transacao")
 public class Transacao {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +33,7 @@ public class Transacao {
 	@NotNull
 	@NotEmpty
 	@Size(min = 3, message = "O nome não pode ter menos que 5 caracteres!")
-	@Column(name = "nome", length = 37, unique = true)
+	@Column(name = "descricao", length = 37, unique = true)
 	private String descricao;
 
 	@Column(name = "data")
@@ -49,11 +45,11 @@ public class Transacao {
 	@NumberFormat(style = Style.NUMBER)
 	@Column(name = "valor")
 	private BigDecimal valor;
-
+	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="cartao_id")
 	private Cartao cartao;
-
+	
 	public Cartao getCartao() {
 		return cartao;
 	}
