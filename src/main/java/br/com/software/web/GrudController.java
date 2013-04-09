@@ -75,8 +75,8 @@ public class GrudController {
 		
 	}
 	@RequestMapping(value = "/grud/transacao/", method = RequestMethod.POST)
-	public String adionarTransacao(@ModelAttribute("transacao") Transacao transacao,@RequestParam(value="cartao.id") String idcartao){
-		transacao.setCartao(cartaodao.getCartao(Long.valueOf(idcartao)));
+	public String adionarTransacao(@ModelAttribute("transacao") Transacao transacao,@RequestParam(value="cartao.id") Long idcartao){
+		transacao.setCartao(cartaodao.getCartao(idcartao));
 		Transacao t = transacao;
 		transacaoDao.persistir(t);
 		return "/index";
