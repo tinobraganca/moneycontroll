@@ -22,11 +22,13 @@
 <body>
 	<div id="boxcenter">
 		<c:url var="url" value="" />
-		<form:form action="/grud/transacao/" method="POST" modelAttribute="transacao">
+		<form:form action="/grud/transacao/" method="POST"
+			modelAttribute="transacao">
 
 			<div>
 				<label for="data">Data:</label>
-				<form:input cssStyle="width:250px" maxlength="30" path="data" size="20" />
+				<form:input cssStyle="width:250px" maxlength="30" path="data"
+					size="20" />
 			</div>
 
 			<div>
@@ -39,13 +41,20 @@
 				<form:input cssStyle="width:250px" maxlength="30" path="descricao"
 					size="30" />
 			</div>
-					<form:select path="cartao.id">
-						<form:options items="${cartoes}" itemValue="id" itemLabel="nome" />
-					</form:select>
+			<form:select path="tipo">
+				<form:option value="0">Escolha uma opção</form:option>
+				<form:option value="1">Receita</form:option>
+				<form:option value="2">Despesas</form:option>
+			</form:select>
+
+			<form:select path="cartao.id">
+				<form:option value="-1">Nenhuma das opçoes</form:option>
+				<form:options items="${cartoes}" itemValue="id" itemLabel="nome" />
+			</form:select>
+
 			<div class="submit">
-				<input type="submit" value="Criar Contato" />
+				<input type="submit" value="Criar Transação" />
 			</div>
-			
 		</form:form>
 	</div>
 </body>

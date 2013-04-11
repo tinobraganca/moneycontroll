@@ -1,6 +1,7 @@
 package br.com.software.modelos;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javax.persistence.CascadeType;
@@ -22,6 +23,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 import org.springframework.format.annotation.NumberFormat.Style;
 
+import sun.java2d.pipe.SpanShapeRenderer.Simple;
+
 @Entity
 @Table(name = "transacao")
 public class Transacao {
@@ -38,18 +41,30 @@ public class Transacao {
 
 	@Column(name = "data")
 	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	// iso=ISO.DATE)
 	private Calendar data;
 
 	@NumberFormat(style = Style.NUMBER)
 	@Column(name = "valor")
 	private BigDecimal valor;
-	
+
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="cartao_id")
+	@JoinColumn(name = "cartao_id")
 	private Cartao cartao;
 	
+	@NumberFormat(style = Style.NUMBER)
+	@Column(name = "tipo")
+	private int tipo = 0;
+
+	public int getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(int tipo) {
+		this.tipo = tipo;
+	}
+
 	public Cartao getCartao() {
 		return cartao;
 	}
@@ -85,6 +100,12 @@ public class Transacao {
 	public Calendar getData() {
 		return data;
 	}
+	public String getdataFormatada() {
+		SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
+		return dt.format(this.data.getTime());
+		
+	}
+
 
 	public void setData(Calendar data) {
 		this.data = data;

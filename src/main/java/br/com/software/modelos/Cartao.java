@@ -29,8 +29,8 @@ public class Cartao implements java.io.Serializable {
 	@Size(min = 3, message = "O nome não pode ter menos que 5 caracteres!")
 	@Column(name = "nome", length = 37, unique = true)
 	private String nome;
-	
-	@OneToMany(mappedBy = "cartao" ,cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
 	private List<Transacao> Transacoes;
 
 	public List<Transacao> getTransacoes() {
@@ -56,7 +56,5 @@ public class Cartao implements java.io.Serializable {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-
-	
 
 }

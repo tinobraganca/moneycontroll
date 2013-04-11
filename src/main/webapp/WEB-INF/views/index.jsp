@@ -16,10 +16,10 @@
 		<div id="box">
 		<ul>
 	<li>
-		<h2>Contato</h2>
+		<h2>Money Control</h2>
 		<ul>
-			<li><a href="<c:url value="/contatos"/>">Ver todos</a></li>
-			<li><a href="<c:url value="/grud/transacao"/>">Novo Contato</a></li>
+			<li><a href="<c:url value="/grud/show/"/>">Exibir Transaçoes</a></li>
+			<li><a href="<c:url value="/grud/transacao"/>">Cadastrar Transaçoes</a></li>
 		</ul>
 	</li>
 </ul>
