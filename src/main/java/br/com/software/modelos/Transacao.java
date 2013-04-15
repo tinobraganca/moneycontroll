@@ -35,13 +35,13 @@ public class Transacao {
 
 	@NotNull
 	@NotEmpty
-	@Size(min = 3, message = "O nome não pode ter menos que 5 caracteres!")
-	@Column(name = "descricao", length = 37, unique = true)
+	@Size(min = 2, message = "O nome não pode ter menos que 2 caracteres!")
+	@Column(name = "descricao", length = 100, unique = true)
 	private String descricao;
 
 	@Column(name = "data")
 	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
+	@DateTimeFormat(pattern="dd/MM/yy")
 	// iso=ISO.DATE)
 	private Calendar data;
 
@@ -101,8 +101,8 @@ public class Transacao {
 		return data;
 	}
 	public String getdataFormatada() {
-		SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
-		return dt.format(this.data.getTime());
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
+		return df.format(this.data.getTime());
 		
 	}
 

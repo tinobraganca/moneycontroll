@@ -23,14 +23,21 @@
 </head>
 <body>
 	<div id="boxcenter">
-		<c:url var="url" value="/grud/cadCartao" />
-		<form:form action="${url}" method="POST" modelAttribute="cadCartao">
-			<div>
-				<label for="cartao">Tipo cartao:</label>
-				<form:input cssStyle="width:250px" maxlength="30" path="nome" size="30" />
-				<input type="submit" value="Criar Contato" />
-			</form:form> 
-			</div>
+	<ul class="nav nav-tabs">
+      <li><a href="/index">Início</a></li>
+         <li class="active"><a href="<c:url value="/grud/cad"/>">Cadastro De Pagementos</a></li>
+        <li><a href="<c:url value="/grud/transacao"/>">Cadastrar Transações</a></li>
+        <li><a href="<c:url value="/grud/show/"/>">Exibir Transações</a></li>
+        </ul>
+        <p>
+        </p>
+		<div class="input-append">
+			<c:url var="url" value="/grud/cadCartao" />
+				<form:form action="${url}" method="POST" modelAttribute="cadCartao">
+					<form:input cssStyle="width:250px" maxlength="30" path="nome" size="30" class="span2" id="appendedInputButton" type="text" placeholder="Tipo de Pagamento" />
+					<button class="btn" type="submit" value="Criar Contato" >Criar!</button>
+				</form:form> 
+		</div>
 	</div>
 </body>
 </html>

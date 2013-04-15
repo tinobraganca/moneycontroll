@@ -79,8 +79,10 @@ public class GrudController {
 	@RequestMapping(value = "/grud/show/")
 	public ModelAndView showTransacoes(){
 		ModelAndView mav = new ModelAndView();
-		List<Transacao> showTransacao = transacaoDao.list(0, 10);
+		List<Transacao> showTransacao = transacaoDao.list(0,10);
+		List<Transacao> showTransacao2 = transacaoDao.list(10,20);
 		mav.getModel().put("transacoes",showTransacao);
+		mav.getModel().put("transacoes2",showTransacao2);
 		mav.setViewName("grud/showTransacoes");
 		return mav;
 
