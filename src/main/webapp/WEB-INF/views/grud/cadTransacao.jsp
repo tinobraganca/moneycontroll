@@ -40,11 +40,10 @@
 			</div>
 
 			<div>
-				<label for="valor">valor:</label>
-				<form:input cssStyle="width:250px" maxlength="30" path="valor"
-					size="20" />
+				<label for="valor">valor:<form:errors path="valor" cssClass="errors" /><br /></label>
+				<form:input cssStyle="width:250px" maxlength="30" path="valor" size="20" />
 			</div>
-				<label for="descricao">Descricao:</label>
+				<label for="descricao">Descricao:<form:errors path="descricao" cssClass="errors" /><br /></label>
 			<form:select path="tipo">
 				<form:option value="0">Escolha uma opção</form:option>
 				<form:option value="1">Receita</form:option>
@@ -69,7 +68,7 @@
 	<script type="text/javascript" src="/resources/js/bootstrap-datepicker.js"></script>
 	
 	<script type="text/javascript"> 
-       $('.datepicker').datepicker({format:"dd/mm/yy"})
+        $('.datepicker').datepicker({format:"dd/mm/yy"})
     </script>
     
 	

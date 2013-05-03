@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +43,11 @@ public abstract class HibernateDao<T> {
     }
 
     public List<T> list(int offset, int max) {
-        return (List<T>) getSession().createCriteria(getClazz()).setMaxResults(max).setFirstResult(offset).list();
+    	return (List<T>) getSession().createCriteria(getClazz()).setMaxResults(max).setFirstResult(offset).list();
     }
 
+	public Number getCount() {
+		return (Number)getSession().createCriteria(getClazz()).setProjection(Projections.rowCount()).uniqueResult();
+	}
+	
 }

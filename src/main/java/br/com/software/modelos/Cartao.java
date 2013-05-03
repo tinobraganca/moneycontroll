@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,11 +27,11 @@ public class Cartao implements java.io.Serializable {
 
 	@NotNull
 	@NotEmpty
-	@Size(min = 3, message = "O nome não pode ter menos que 5 caracteres!")
+	@Size(min = 3, message = "O nome não pode ter menos que 3 caracteres!")
 	@Column(name = "nome", length = 37, unique = true)
 	private String nome;
 
-	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	private List<Transacao> Transacoes;
 
 	public List<Transacao> getTransacoes() {

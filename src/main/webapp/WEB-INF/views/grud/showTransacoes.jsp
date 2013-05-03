@@ -23,52 +23,106 @@
 <title>Cadastrar</title>
 </head>
 <body>
-<div id="boxcenter">
-	<ul class="nav nav-tabs">
-      <li><a href="/index">Início</a></li>
-         <li><a href="<c:url value="/grud/cad"/>">Cadastro De Pagementos</a></li>
-        <li><a href="<c:url value="/grud/transacao"/>">Cadastrar Transações</a></li>
-        <li class="active"><a href="<c:url value="/grud/show/"/>">Exibir Transações</a></li>
-        </ul>
+	<div id="boxcenter">
+		<ul class="nav nav-tabs">
+			<li><a href="/index">InÃ­cio</a></li>
+			<li><a href="<c:url value="/grud/cad"/>">Cadastro De
+					Pagementos</a></li>
+			<li><a href="<c:url value="/grud/transacao"/>">Cadastrar
+					TransaÃ§Ãµes</a></li>
+			<li class="active"><a href="<c:url value="/grud/show/"/>">Exibir
+					TransaÃ§Ãµes</a></li>
+		</ul>
 		<div>
 			<table class="table table-hover" width="600px">
 				<tr>
 				<thead>
 					<th>#</th>
-					<th>Descrição</th>
+					<th>DescriÃ§Ã£o</th>
 					<th>Data</th>
 					<th>Valor</th>
 					<th>Pagemento</th>
 					<th>Tipo</th>
 				</thead>
 				</tr>
-				<c:forEach items="${transacoes}" var="transacao">
-					<c:if test="${transacao.tipo==1}">
-						<tr class="success">
-							<td>${transacao.id}</td>
-							<td>${transacao.descricao}</td>
-							<td>${transacao.dataFormatada}</td>
-							<td>${transacao.valor}</td>
-							<td>${transacao.cartao.nome}</td>
 
-							<td><c:if test="${transacao.tipo==1}">Receita</c:if> <c:if
-									test="${transacao.tipo==2}">Despesas</c:if></td>
-						</tr>
-					</c:if>
-					<c:if test="${transacao.tipo==2}">
-						<tr class="error">
-							<td>${transacao.id}</td>
-							<td>${transacao.descricao}</td>
-							<td>${transacao.dataFormatada}</td>
-							<td>${transacao.valor}</td>
-							<td>${transacao.cartao.nome}</td>
-							<td><c:if test="${transacao.tipo==1}">Receita</c:if> <c:if
-									test="${transacao.tipo==2}">Despesas</c:if></td>
-						</tr>
-					</c:if>
-				</c:forEach>
+				<form:form action="/grud/show/" method="GET" modelAttribute="page.page">
+					<c:forEach items="${transacoes}" var="transacao">
+						<c:if test="${transacao.tipo==1}">
+							<tr class="success" onclick="editar(${transacao.id})">
+								<td>${transacao.id}</td>
+								<td>${transacao.descricao}</td>
+								<td>${transacao.dataFormatada}</td>
+								<td>${transacao.valor}</td>
+								<td>${transacao.cartao.nome}</td>
+
+								<td><c:if test="${transacao.tipo==1}">Receita</c:if> <c:if
+										test="${transacao.tipo==2}">Despesas</c:if></td>
+							</tr>
+						</c:if>
+						<c:if test="${transacao.tipo==2}">
+							<tr class="error">
+								<td>${transacao.id}</td>
+								<td>${transacao.descricao}</td>
+								<td>${transacao.dataFormatada}</td>
+								<td>${transacao.valor}</td>
+								<td>${transacao.cartao.nome}</td>
+								<td><c:if test="${transacao.tipo==1}">Receita</c:if> <c:if
+										test="${transacao.tipo==2}">Despesas</c:if></td>
+							</tr>
+						</c:if>
+					</c:forEach>
+				</form:form>
 			</table>
+			<c:out value="${maxPages}" />
+			<form:form action="/grud/show/" method="GET" modelAttribute="page">
+					<div class="pagination">
+						<ul>
+<%-- 							<li><a href="<form:input path="page"/>">${maxPages}</a></li> --%>
+						</ul>
+					</div>
+			</form:form>
+
+			<!-- Modal -->
+			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog"
+				aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">Ã—</button>
+					<h3 id="myModalLabel">Modal header</h3>
+				</div>
+				<div class="modal-body">
+					<p>Um corpo fino â€¦</p>
+				</div>
+				<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
+					<button class="btn btn-primary">Salvar mudanÃ§as</button>
+				</div>
+			</div>
+
 		</div>
-	</div>
+		<script type="text/javascript" src="/resources/js/jquery.js"></script>
+		<script type="text/javascript" src="/resources/js/bootstrap.min.js">
+	
+	</script>
+		<script type="text/javascript">
+	  
+	var editar = function(id) {
+		   $.ajax({
+	           url :'/updateControl/',
+	           type :'post',
+	           data :{'id':id},
+	           success: function(retorno){
+	        	      $('#myModal').html(retorno);
+	        	    },
+               error: function(retorno){
+                  alert("Erro: "+retorno);
+               }
+	       })
+	   };
+	   
+	$('#myModal').modal(data-backdrop="'show'");
+	   
+	</script>
 </body>
 </html>
