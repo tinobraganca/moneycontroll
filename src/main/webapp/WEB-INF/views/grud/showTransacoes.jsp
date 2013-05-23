@@ -6,123 +6,129 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta charset="utf-8">
 <link href="/resources/css/bootstrap.css" rel="stylesheet">
 <link href="/resources/css/bootstrap-responsive.css" rel="stylesheet">
 <style type="text/css">
 #boxcenter {
-	height: 480px;
-	left: 50%;
-	margin: -240px 0 0 -320px;
-	position: absolute;
-	top: 50%;
-	width: 640px
+    height: 480px;
+    left: 50%;
+    margin: -240px 0 0 -320px;
+    position: absolute;
+    top: 50%;
+    width: 640px
 }
 </style>
 <title>Cadastrar</title>
 </head>
 <body>
-	<div id="boxcenter">
-		<ul class="nav nav-tabs">
-			<li><a href="/index">Início</a></li>
-			<li><a href="<c:url value="/grud/cad"/>">Cadastro De
-					Pagementos</a></li>
-			<li><a href="<c:url value="/grud/transacao"/>">Cadastrar
-					Transações</a></li>
-			<li class="active"><a href="<c:url value="/grud/show/"/>">Exibir
-					Transações</a></li>
-		</ul>
-		<div>
-			<table class="table table-hover" width="600px">
-				<tr>
-				<thead>
-					<th>#</th>
-					<th>Descrição</th>
-					<th>Data</th>
-					<th>Valor</th>
-					<th>Pagemento</th>
-					<th>Tipo</th>
-				</thead>
-				</tr>
+    <div id="boxcenter">
+        <ul class="nav nav-tabs">
+	        <li><a href="/index">In&iacute;cio</a></li>
+	        <li><a href="<c:url value="/grud/cad"/>">Cadastro De Pagementos</a></li>
+	        <li><a href="<c:url value="/grud/transacao"/>">Cadastrar Transa&ccedil;&otilde;es</a></li>
+	        <li class="active"><a href="<c:url value="/grud/show/"/>">Exibir Transa&ccedil;&otilde;es</a></li>
+        </ul>
+            <table id="tab" class="table table-hover" width="600px">
+                <tr>
+                <thead>
+                    <th>#</th>
+                    <th>Descrição</th>
+                    <th>Data</th>
+                    <th>Valor</th>
+                    <th>Pagemento</th>
+                    <th>Tipo</th>
+                </thead>
+                </tr>
+            </table>
+            <div  class="boxcenter" id="page-selection"><!--  Pagination goes here--></div>
 
-				<form:form action="/grud/show/" method="GET" modelAttribute="page.page">
-					<c:forEach items="${transacoes}" var="transacao">
-						<c:if test="${transacao.tipo==1}">
-							<tr class="success" onclick="editar(${transacao.id})">
-								<td>${transacao.id}</td>
-								<td>${transacao.descricao}</td>
-								<td>${transacao.dataFormatada}</td>
-								<td>${transacao.valor}</td>
-								<td>${transacao.cartao.nome}</td>
+<!--            <!-- Modal --> 
+<!--            <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" -->
+<!--                aria-labelledby="myModalLabel" aria-hidden="true"> -->
+<!--                <div class="modal-header"> -->
+<!--                    <button type="button" class="close" data-dismiss="modal" -->
+<!--                        aria-hidden="true">×</button> -->
+<!--                    <h3 id="myModalLabel">Modal header</h3> -->
+<!--                </div> -->
+<!--                <div class="modal-body"> -->
+<!--                    <p>Um corpo fino …</p> -->
+<!--                </div> -->
+<!--                <div class="modal-footer"> -->
+<!--                    <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button> -->
+<!--                    <button class="btn btn-primary">Salvar mudanças</button> -->
+<!--                </div> -->
+<!--            </div> -->
 
-								<td><c:if test="${transacao.tipo==1}">Receita</c:if> <c:if
-										test="${transacao.tipo==2}">Despesas</c:if></td>
-							</tr>
-						</c:if>
-						<c:if test="${transacao.tipo==2}">
-							<tr class="error">
-								<td>${transacao.id}</td>
-								<td>${transacao.descricao}</td>
-								<td>${transacao.dataFormatada}</td>
-								<td>${transacao.valor}</td>
-								<td>${transacao.cartao.nome}</td>
-								<td><c:if test="${transacao.tipo==1}">Receita</c:if> <c:if
-										test="${transacao.tipo==2}">Despesas</c:if></td>
-							</tr>
-						</c:if>
-					</c:forEach>
-				</form:form>
-			</table>
-			<c:out value="${maxPages}" />
-			<form:form action="/grud/show/" method="GET" modelAttribute="page">
-					<div class="pagination">
-						<ul>
-<%-- 							<li><a href="<form:input path="page"/>">${maxPages}</a></li> --%>
-						</ul>
-					</div>
-			</form:form>
+        </div>
+<script type="text/javascript" src="/resources/js/jquery.js"></script>
+<script type="text/javascript" src="/resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/resources/js/jquery.bootpag.js"></script>
+<script type="text/javascript">
+var page = 1;
+$(document).ready(function(){
+    myfunction(page);
+    numeroMaxPag();
+});
 
-			<!-- Modal -->
-			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog"
-				aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-hidden="true">×</button>
-					<h3 id="myModalLabel">Modal header</h3>
-				</div>
-				<div class="modal-body">
-					<p>Um corpo fino …</p>
-				</div>
-				<div class="modal-footer">
-					<button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
-					<button class="btn btn-primary">Salvar mudanças</button>
-				</div>
-			</div>
+var myfunction = function(page){
+     var jsonUrl = "/grud/show/lista/?page="+page;
+     var html ='';
+        $.ajax({
+            'type': "GET",
+            'url' :jsonUrl,
+            'dataType':"json",
+            'success': function (retorno) {
+                $.each(retorno, function(index) {
+                    var item = retorno[index];
+                    var tipo = item['tipo'];
+                    if (tipo == 1) {
+                        html += '<tr class="success">';
+                        html += '<td>' + item['id'] + '</td>';
+                        html += '<td>' + item['descricao'] +'</td>';
+                        html += '<td>' + item['dataFormatada'] +'</td>';
+                        html += '<td>' + item['valor'] +'</td>';
+                        html += '<td>' + item['Transacoes'] +'</td>';
+                        html += '<td> Receita</td>';
+                        html += '</tr>'
+                    } if (tipo == 2) {
+                        html += '<tr class="error">';
+                        html += '<td>' + item['id'] + '</td>';
+                        html += '<td>' + item['descricao'] +'</td>';
+                        html += '<td>' + item['dataFormatada'] +'</td>';
+                        html += '<td>' + item['valor'] +'</td>';
+                        html += '<td>' + item['cartao.nome'] +'</td>';
+                        html += '<td> Despesas</td>';
+                        html += '</tr>'
+                    }
+                });
+             $('#tab').html($(html));
+            }
+        });
+}
 
-		</div>
-		<script type="text/javascript" src="/resources/js/jquery.js"></script>
-		<script type="text/javascript" src="/resources/js/bootstrap.min.js">
-	
-	</script>
-		<script type="text/javascript">
-	  
-	var editar = function(id) {
-		   $.ajax({
-	           url :'/updateControl/',
-	           type :'post',
-	           data :{'id':id},
-	           success: function(retorno){
-	        	      $('#myModal').html(retorno);
-	        	    },
-               error: function(retorno){
-                  alert("Erro: "+retorno);
-               }
-	       })
-	   };
-	   
-	$('#myModal').modal(data-backdrop="'show'");
-	   
-	</script>
+var numeroMaxPag = function (){
+         var jsonUrl = "/grud/show/pagMax";
+         var html ='';boxcenter
+            $.ajax({
+                'type': "GET",
+                'url' :jsonUrl,
+                'dataType':"json",
+                'success': function (retorno) {
+                       console.log(retorno);
+                       $('#page-selection').bootpag({   
+                       total: retorno,
+                       page: 1,
+                       maxVisible: 5, 
+                    }).on('page', function(event, num){
+                        console.log(event);
+                        console.log(num);
+                        myfunction(num);
+                    });
+             }
+      });
+}
+
+</script>
 </body>
 </html>

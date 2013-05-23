@@ -17,9 +17,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
@@ -52,9 +52,10 @@ public class Transacao {
 	@Column(name = "valor")
 //	@Size(max=3, message="max 3")
 	private BigDecimal valor = BigDecimal.ZERO;
-
+	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "cartao_id")
+	@JsonBackReference("cartao")
 	private Cartao cartao;
 	
 	@NumberFormat(style = Style.NUMBER)

@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -30,14 +31,16 @@ public class Cartao implements java.io.Serializable {
 	@Size(min = 3, message = "O nome não pode ter menos que 3 caracteres!")
 	@Column(name = "nome", length = 37, unique = true)
 	private String nome;
-
+	
 	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@JsonManagedReference("cartao")
 	private List<Transacao> Transacoes;
 
 	public List<Transacao> getTransacoes() {
 		return Transacoes;
 	}
-
+	
+	@JsonManagedReference("cartao")
 	public void setTransacoes(List<Transacao> transacoes) {
 		this.Transacoes = transacoes;
 	}
