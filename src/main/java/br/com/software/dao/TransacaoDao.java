@@ -3,16 +3,17 @@ package br.com.software.dao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.software.modelos.Transacao;
 
-@Repository("transacao")
+@Component("transacaoDao")
+@Transactional
 public class TransacaoDao extends HibernateDao<Transacao>{
 	
 	@Override
 	protected Class getClazz() {
-		// TODO Auto-generated method stub
 		return Transacao.class;
 	}
 	

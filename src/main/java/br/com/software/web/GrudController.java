@@ -1,6 +1,5 @@
 package br.com.software.web;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -8,10 +7,8 @@ import javax.validation.Valid;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -80,7 +77,7 @@ public class GrudController {
 	 
 	
 	@RequestMapping(value = "/grud/transacao/", method = RequestMethod.POST)
-	public String adionarTransacao(@Validated @ModelAttribute("transacao")Transacao transacao ,BindingResult result,@RequestParam(value = "cartao.id") Long idcartao) {
+	public String adionarTransacao(@Valid @ModelAttribute("transacao")Transacao transacao ,BindingResult result,@RequestParam(value = "cartao.id") Long idcartao) {
 		if(result.hasFieldErrors()){
 			return "grud/cadTransacao";
 		}else{
@@ -90,15 +87,14 @@ public class GrudController {
 			return "/index";
 		}
 	}
-//
-	
-	
+	 
+	/* Inicio da parte da visualizacao */
 	
 	@RequestMapping(value = "/grud/show/*", method = RequestMethod.GET)
 	public String showCad() {
 		return "grud/showTransacoes";
 	}
-	
+
 	@RequestMapping(value = "/grud/show/pagMax", method = RequestMethod.GET)
 	public @ResponseBody int totalPag(){
 		int size = 10;
@@ -116,6 +112,8 @@ public class GrudController {
 		return lista;
 	} 
 
+	/* Fim da parte da visualizacao */
+	
 	@RequestMapping(value = "/updateControl")
 	public @ResponseBody String update(@RequestParam String id){
 		Transacao transacao = transacaoDao.get(Long.valueOf(id));
