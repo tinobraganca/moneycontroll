@@ -91,8 +91,13 @@ public class GrudController {
 	/* Inicio da parte da visualizacao */
 	
 	@RequestMapping(value = "/grud/show/*", method = RequestMethod.GET)
-	public String showCad() {
-		return "grud/showTransacoes";
+	public ModelAndView showCad(ModelMap modelmap){
+	    modelmap.addAttribute("alteraTransacao", new Transacao());
+	    ModelAndView mav = new ModelAndView();
+	    List<Cartao> cartoes = cartaodao.lista(0, 10);
+        mav.getModel().put("cartoes", cartoes);
+	    mav.setViewName("grud/showTransacoes");
+		return mav;
 	}
 
 	@RequestMapping(value = "/grud/show/pagMax", method = RequestMethod.GET)
@@ -114,17 +119,27 @@ public class GrudController {
 
 	/* Fim da parte da visualizacao */
 	
-	@RequestMapping(value = "/updateControl")
-	public @ResponseBody String update(@RequestParam String id){
-		Transacao transacao = transacaoDao.get(Long.valueOf(id));
-		transacao.setCartao(null);
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			return mapper.writeValueAsString(transacao);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "fuuuu";
-		}
-		
-	}
+	/*Começo da parte de alteraçao de transacao */
+	
+    @RequestMapping(value = "/grud/show/updateControl/", method = RequestMethod.GET)
+    public @ResponseBody
+    Transacao update(@RequestParam String id) {
+        Transacao transacao = transacaoDao.get(Long.valueOf(id));
+        return transacao;
+    }
+
+    @RequestMapping(value = "/grud/show/alteraTransacao/", method = RequestMethod.POST)
+    public String alteraTransacao(@Valid @ModelAttribute("alteraTransacao") Transacao transacao,BindingResult result,@RequestParam(defaultValue = "1", value = "cartao.id", required = false) Long idcartao,@RequestParam String id) {
+        if (result.hasFieldErrors()) {
+            return "grud/cadTransacao";
+        }
+        else {
+            transacao.setCartao(cartaodao.getCartao(idcartao));
+            Transacao t = transacao;
+            transacaoDao.updateT(transacao);
+            return "/index";
+        }
+    }
+    /* Fim da parte de alteraçao de transacao */
+
 }

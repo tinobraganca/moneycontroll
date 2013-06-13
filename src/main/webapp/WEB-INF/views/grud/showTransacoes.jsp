@@ -30,47 +30,109 @@
 	        <li class="active"><a href="<c:url value="/grud/show/"/>">Exibir Transa&ccedil;&otilde;es</a></li>
         </ul>
             <table id="tab" class="table table-hover" width="600px">
-                <tr>
-                <thead>
-                    <th>#</th>
-                    <th>Descrição</th>
-                    <th>Data</th>
-                    <th>Valor</th>
-                    <th>Pagemento</th>
-                    <th>Tipo</th>
-                </thead>
-                </tr>
             </table>
             <div  class="boxcenter" id="page-selection"><!--  Pagination goes here--></div>
 
-<!--            <!-- Modal --> 
-<!--            <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" -->
-<!--                aria-labelledby="myModalLabel" aria-hidden="true"> -->
-<!--                <div class="modal-header"> -->
-<!--                    <button type="button" class="close" data-dismiss="modal" -->
-<!--                        aria-hidden="true">×</button> -->
-<!--                    <h3 id="myModalLabel">Modal header</h3> -->
-<!--                </div> -->
-<!--                <div class="modal-body"> -->
-<!--                    <p>Um corpo fino …</p> -->
-<!--                </div> -->
-<!--                <div class="modal-footer"> -->
-<!--                    <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button> -->
-<!--                    <button class="btn btn-primary">Salvar mudanças</button> -->
-<!--                </div> -->
-<!--            </div> -->
+<!--            <!-- Modal -->
+		<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h3 id="myModalLabel">Altera&ccedil;ao de Transa&ccedil;ao</h3>
+			</div>
+				<form:form action="/grud/show/alteraTransacao/" method="POST" modelAttribute="alteraTransacao">
+			<div class="modal-body">
+					<div>
+						<label for="data">Data:</label>
+						<form:input id="data" cssStyle="width:250px" maxlength="30" path="data"
+							size="20" class="datepicker" />
+					</div>
+                 
+					<div>
+						<label  for="valor">valor:<form:errors path="valor"
+								cssClass="errors" /><br /></label>
+						<form:input id="valor" cssStyle="width:250px" maxlength="30" path="valor"
+							size="20" />
+					</div>
+					<form:input type="hidden" id="id" path="id"/>
+					<label for="descricao">Descri&ccedil;ao:<form:errors
+							path="descricao" cssClass="errors" /><br /></label>
+					<form:select path="tipo">
+						<form:option value="0">Escolha uma op&ccedil;ao</form:option>
+						<form:option value="1">Receita</form:option>
+						<form:option value="2">Despesas</form:option>
+					</form:select>
 
-        </div>
+					<form:select id="cartao" path="cartao.id">
+						<form:option value="0">Escolha uma op&ccedil;ao</form:option>
+						<form:options items="${cartoes}" itemValue="id" itemLabel="nome" />
+					</form:select>
+					<div>
+						<form:textarea rows="3" id="descricao" cssStyle="width:250px" maxlength="30"
+							path="descricao" type="" placeholder="Digite aqui" size="30" />
+					</div>
+					<p></p>
+			</div>
+			
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
+				<button class="btn btn-primary">Salvar mudan&ccedil;as</button>
+			</div>
+			</form:form>
+		</div>
+
+	</div>
 <script type="text/javascript" src="/resources/js/jquery.js"></script>
 <script type="text/javascript" src="/resources/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/resources/js/jquery.bootpag.js"></script>
+<script type="text/javascript" src="/resources/js/bootstrap-datepicker.js"></script>
+
 <script type="text/javascript">
 var page = 1;
 $(document).ready(function(){
+  $('.datepicker').datepicker({format:"dd/mm/yy"})
     myfunction(page);
     numeroMaxPag();
 });
-
+function chamaModal(id){
+    var jsonUrl = "/grud/show/updateControl/?id="+id;
+    var html ='';
+      $.ajax({
+          'type': "GET",
+          'url' :jsonUrl,
+          'dataType':"json",
+          'success' : function (retorno){
+        	  console.log(retorno)
+              $('#myModal').modal();
+                      var tipo = retorno['tipo'];
+      
+                      $('#valor').val(retorno['valor']);
+            		  $('#descricao').val(retorno['descricao']);
+                      $('#data').val(retorno['dataFormatada']);
+                      $('#id').val(retorno['id']);
+                      $.each(retorno,function(index) { 
+                    	    var item = retorno[index];
+                    	    var opcoes = retorno['cartao'].id;
+                    	    var $dd = $(retorno['cartao'].nome);
+                            var $options = $('option', $dd);
+                    	    
+                            $options.each(function(){
+                    	    	   if ($(this).val() == opcoes){                               
+                    	    		    $dd.val($(this).val());                    	    		 
+                    	    	   }
+                    	    });
+                    });
+                      var $dd = $('#tipo');
+                      var $options = $('option', $dd);
+                      $options.each(function() {                    	 
+                    	    if ($(this).val() == tipo){                    	    	 
+                    	    	   $dd.val($(this).val()); 
+                    	    }                    	   
+                      });
+              }
+      });
+}
 var myfunction = function(page){
      var jsonUrl = "/grud/show/lista/?page="+page;
      var html ='';
@@ -79,25 +141,27 @@ var myfunction = function(page){
             'url' :jsonUrl,
             'dataType':"json",
             'success': function (retorno) {
+            	html += '<tr><th>#</th><th>Descri&ccedil;ao</th><th>Data</th><th>Valor</th><th>Pagemento</th><th>Tipo</th></tr>';  
                 $.each(retorno, function(index) {
-                    var item = retorno[index];
+                  console.log(retorno[index])
+                	var item = retorno[index];
                     var tipo = item['tipo'];
                     if (tipo == 1) {
-                        html += '<tr class="success">';
-                        html += '<td>' + item['id'] + '</td>';
+                        html += '<tr class="success" onclick="chamaModal('+ item['id'] + ')">';
+                        html += '<td>'+ item['id'] + '</a></td>';
                         html += '<td>' + item['descricao'] +'</td>';
                         html += '<td>' + item['dataFormatada'] +'</td>';
                         html += '<td>' + item['valor'] +'</td>';
-                        html += '<td>' + item['Transacoes'] +'</td>';
+                        html += '<td>' + item['cartao'].nome +'</td>';
                         html += '<td> Receita</td>';
                         html += '</tr>'
                     } if (tipo == 2) {
-                        html += '<tr class="error">';
+                        html += '<tr class="error"  onclick="chamaModal('+ item['id'] + ')">';
                         html += '<td>' + item['id'] + '</td>';
                         html += '<td>' + item['descricao'] +'</td>';
                         html += '<td>' + item['dataFormatada'] +'</td>';
                         html += '<td>' + item['valor'] +'</td>';
-                        html += '<td>' + item['cartao.nome'] +'</td>';
+                        html += '<td>' + item['cartao'].nome +'</td>';
                         html += '<td> Despesas</td>';
                         html += '</tr>'
                     }

@@ -34,7 +34,10 @@ public abstract class HibernateDao<T> {
     public void persistir(T objeto) {
         getSession().saveOrUpdate(objeto);
     }
-
+    public void  updateT(T objeto){
+        getSession().merge(objeto);
+        
+    }
     public void excluir(T objeto) {
         getSession().delete(objeto);
     }
@@ -46,7 +49,7 @@ public abstract class HibernateDao<T> {
     public List<T> list(int offset, int max) {
     	return (List<T>) getSession().createCriteria(getClazz()).setMaxResults(max).setFirstResult(offset).list();
     }
-
+    
 	public Number getCount() {
 		return (Number)getSession().createCriteria(getClazz()).setProjection(Projections.rowCount()).uniqueResult();
 	}

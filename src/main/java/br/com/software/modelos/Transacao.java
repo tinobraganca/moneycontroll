@@ -17,6 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
@@ -47,15 +48,16 @@ public class Transacao {
 	// iso=ISO.DATE)
 	private Calendar data;
 
+	@NotNull
 	@NumberFormat(style = Style.NUMBER)
-//	@Pattern(regexp="/d[1-9]{1-1}[0-9]{0-9}",message = "o valor informado não e valido!!Exp: 221.00")
+//	@Pattern(regexp="^(0|[1-9][0-9]*)$",message = "o valor informado não e valido!!Exp: 221.00")
 	@Column(name = "valor")
 //	@Size(max=3, message="max 3")
 	private BigDecimal valor = BigDecimal.ZERO;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "cartao_id")
-	@JsonBackReference("cartao")
+//	@JsonBackReference("cartao")
 	private Cartao cartao;
 	
 	@NumberFormat(style = Style.NUMBER)

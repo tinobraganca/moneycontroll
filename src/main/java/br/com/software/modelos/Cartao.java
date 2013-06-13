@@ -32,18 +32,18 @@ public class Cartao implements java.io.Serializable {
 	@Column(name = "nome", length = 37, unique = true)
 	private String nome;
 	
-	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
-	@JsonManagedReference("cartao")
-	private List<Transacao> Transacoes;
-
-	public List<Transacao> getTransacoes() {
-		return Transacoes;
-	}
-	
-	@JsonManagedReference("cartao")
-	public void setTransacoes(List<Transacao> transacoes) {
-		this.Transacoes = transacoes;
-	}
+//	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+//	@JsonManagedReference("cartao")
+//	private List<Transacao> Transacoes;
+//
+//	public List<Transacao> getTransacoes() {
+//		return Transacoes;
+//	}
+//	
+//	@JsonManagedReference("cartao")
+//	public void setTransacoes(List<Transacao> transacoes) {
+//		this.Transacoes = transacoes;
+//	}
 
 	public Long getId() {
 		return id;
