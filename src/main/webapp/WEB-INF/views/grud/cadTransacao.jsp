@@ -35,7 +35,7 @@
 			modelAttribute="transacao">
 
 			<div>
-				<label for="data">Data:</label>
+				<label for="data">Data:<form:errors path="data" cssClass="errors" /><br /></label>
 				<form:input cssStyle="width:250px" maxlength="30" path="data" size="20" class="datepicker" />
 			</div>
 

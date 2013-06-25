@@ -24,9 +24,9 @@
         <property name="suffix" value=".jsp" />
     </bean>
     
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="/META-INF/messages" />
-    </bean>
+<!--     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"> -->
+<!--         <property name="basename" value="/META-INF/messages" /> -->
+<!--     </bean> -->
 <!--         <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/> -->
     
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" destroy-method="destroy">
@@ -35,7 +35,7 @@
 	            <prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/moneycontroll</prop>
 	            <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
 	            <prop key="hibernate.connection.username">root</prop>
-	            <prop key="hibernate.connection.password">tino</prop>
+	            <prop key="hibernate.connection.password">root</prop>
 	            <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
 	            <prop key="hibernate.show_sql">true</prop>
 	            <prop key="hibernate.format_sql">true</prop>
@@ -55,8 +55,18 @@
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
     
+    
     <tx:annotation-driven/>
     <context:component-scan base-package="br.com.software." />
-    
+	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="org.springframework.core.convert.ConversionFailedException">erro1</prop>
+				<prop key="org.hibernate.TypeMismatch">YourView</prop>
+				<prop key="java.lang.Exception">typeMismatch</prop>
+				<prop key="java.lang.IllegalArgumentException">typeMismatch</prop>
+			</props>
+		</property>
+</bean>
 </beans>
 

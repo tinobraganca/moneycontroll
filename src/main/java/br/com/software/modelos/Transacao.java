@@ -34,13 +34,14 @@ public class Transacao {
 	@Column(name = "id", unique = true)
 	private Long id;
 
-	@NotNull
+	@NotNull(message="deve acrensentar uma descriçao!")
 	@NotEmpty
 	@Size(min = 2, message = "O nome não pode ter menos que 2 caracteres!")
 	@Valid
 	@Column(name = "descricao", length = 100, unique = true)
 	private String descricao;
-
+	
+//	@NotNull(message="deve por alguma Data!")
 	@Column(name = "data")
 //	@Pattern(regexp="^(([012][1-9]|[123]0|31)/(0[1-9]|1[012])/[0-9]{2})$", message = "Data errada!! escolha um data valida")
 	@Temporal(TemporalType.DATE)
@@ -48,7 +49,7 @@ public class Transacao {
 	// iso=ISO.DATE)
 	private Calendar data;
 
-	@NotNull
+	@NotNull(message="Voce deve colocar um valor !!")
 	@NumberFormat(style = Style.NUMBER)
 //	@Pattern(regexp="^(0|[1-9][0-9]*)$",message = "o valor informado não e valido!!Exp: 221.00")
 	@Column(name = "valor")
