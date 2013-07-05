@@ -1,6 +1,9 @@
 package br.com.software.web;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -22,7 +25,7 @@ import br.com.software.modelos.Cartao;
 import br.com.software.modelos.Transacao;
 
 @Controller
-public class GrudController {
+public class GrudController  {
 	@Autowired
 	private TransacaoDao transacaoDao;
 
@@ -46,6 +49,7 @@ public class GrudController {
 		cartaodao = dao;
 	}
 
+	
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String habilitaIndex() {
 		return "index";
@@ -78,19 +82,20 @@ public class GrudController {
 	
 	@RequestMapping(value = "/grud/transacao/", method = RequestMethod.POST)
 	public String adionarTransacao(@Valid @ModelAttribute("transacao")Transacao transacao ,BindingResult result,@RequestParam(value = "cartao.id") Long idcartao) {
+		String status = "ok";
 		if(result.hasFieldErrors()){
-			return "grud/cadTransacao";
+			status="fail";
+			
 		}else{
 			transacao.setCartao(cartaodao.getCartao(idcartao));
-			Transacao t = transacao;
-			transacaoDao.persistir(t);
-			return "/index";
+			transacaoDao.persistir(transacao);
 		}
+		return "redirect:/grud/transacao/?status="+status;
 	}
 	 
 	/* Inicio da parte da visualizacao */
 	
-	@RequestMapping(value = "/grud/show/*", method = RequestMethod.GET)
+	@RequestMapping(value = "/grud/show*", method = RequestMethod.GET)
 	public ModelAndView showCad(ModelMap modelmap){
 	    modelmap.addAttribute("alteraTransacao", new Transacao());
 	    ModelAndView mav = new ModelAndView();
@@ -116,7 +121,20 @@ public class GrudController {
 		List<Transacao> lista = transacaoDao.list(firstResult, size);
 		return lista;
 	} 
-
+	
+	
+	@RequestMapping(value = "/grud/abrastractSomaTotal", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Double> somasGerais(){
+		Double valorReceita =transacaoDao.getValorReceita().doubleValue();
+		Double valorDespesa =transacaoDao.getValorDespesas().doubleValue();
+		Double valorTotal = valorDespesa+valorReceita;
+		Map<String,Double> resultado = new HashMap<String, Double>();
+		resultado.put("receitas", valorReceita);
+		resultado.put("despesas", valorDespesa);
+		resultado.put("total",valorTotal);
+		return resultado;
+	}
+	
 	/* Fim da parte da visualizacao */
 	
 	/*Começo da parte de alteraçao de transacao */

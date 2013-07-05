@@ -2,9 +2,12 @@ package br.com.software.dao;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -53,5 +56,11 @@ public abstract class HibernateDao<T> {
 	public Number getCount() {
 		return (Number)getSession().createCriteria(getClazz()).setProjection(Projections.rowCount()).uniqueResult();
 	}
+	public Number getValorReceita(){
+		return (Number)getSession().createCriteria(getClazz()).setProjection(Projections.sum("valor")).add(Restrictions.eq("tipo", 1)).uniqueResult();
+		}
+	public Number getValorDespesas(){
+		return (Number)getSession().createCriteria(getClazz()).setProjection(Projections.sum("valor")).add(Restrictions.eq("tipo", 2)).uniqueResult();
+		}
 	
 }
