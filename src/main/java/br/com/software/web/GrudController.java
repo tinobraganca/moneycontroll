@@ -55,6 +55,11 @@ public class GrudController  {
 		return "index";
 
 	}
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String habilitaTelaDeLogin() {
+		return "telaLogin";
+
+	}
 
 	@RequestMapping(value = "/grud/cad", method = RequestMethod.GET)
 	public String habilitaCCartao(ModelMap modelMap) {

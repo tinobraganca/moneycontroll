@@ -36,12 +36,6 @@
 			     <----------------------------------------------------------------------------------->
 			</p>
 			
-<!-- 			<p> -->
-<%-- 				<a class="btn btn-primary btn-large"href="<c:url value="/grud/show/"/>">Exibir Transações</a>  --%>
-<%-- 				<a class="btn btn-primary btn-large"href="<c:url value="/grud/transacao"/>">Cadastrar Transações</a> --%>
-<%-- 				<a class="btn btn-primary btn-large"href="<c:url value="/grud/cad"/>">Cadastro De Pagementos</a> --%>
-				
-<!-- 			</p> -->
 		</div>
 	</div>
 </body>
