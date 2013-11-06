@@ -29,6 +29,7 @@ import org.springframework.format.annotation.NumberFormat.Style;
 @Entity
 @Table(name = "transacao")
 public class Transacao {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true)
@@ -60,6 +61,10 @@ public class Transacao {
 	@JoinColumn(name = "cartao_id")
 //	@JsonBackReference("cartao")
 	private Cartao cartao;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id")
+	private User user;
 	
 	@NumberFormat(style = Style.NUMBER)
 	@Column(name = "tipo")
@@ -117,6 +122,14 @@ public class Transacao {
 
 	public void setData(Calendar data) {
 		this.data = data;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }
