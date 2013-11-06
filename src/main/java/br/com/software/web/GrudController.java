@@ -1,10 +1,12 @@
 package br.com.software.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,11 +20,28 @@ import org.springframework.web.servlet.ModelAndView;
 
 import br.com.software.dao.CartaoDao;
 import br.com.software.dao.TransacaoDao;
+import br.com.software.dao.UserDao;
+import br.com.software.dao.UsuarioConnectionDao;
 import br.com.software.modelos.Cartao;
 import br.com.software.modelos.Transacao;
+import br.com.software.modelos.User;
+import br.com.software.modelos.UserConnection;
+import br.com.software.social.UserCookieGenerator;
+
 
 @Controller
-public class GrudController {
+public class GrudController  {
+	@Autowired
+	private UsuarioConnectionDao userConnectionDao;
+	
+	public UsuarioConnectionDao getUserConnectionDao() {
+		return userConnectionDao;
+	}
+
+	public void setUserConnectionDao(UsuarioConnectionDao userConnectionDao) {
+		this.userConnectionDao = userConnectionDao;
+	}
+
 	@Autowired
 	private TransacaoDao transacaoDao;
 
@@ -46,9 +65,41 @@ public class GrudController {
 		cartaodao = dao;
 	}
 
+	@Autowired
+	private UserDao userDao;
+	
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
+	}
+
+//	@RequestMapping(value = "/", method = RequestMethod.GET)
+//	public String conectado(){
+//		SocialConfig conexao = new SocialConfig();
+//		Facebook face = conexao.facebook();
+//		if (face.isAuthorized()){
+//			FacebookProfile faceprofile = face.userOperations().getUserProfile();
+//			User user = new User();
+//			user.setLogin(faceprofile.getName());
+//			user.setName(faceprofile.getName());
+//			
+//		}
+//		return "redirect:/index";
+//	}
+
+	private final UserCookieGenerator userCookieGenerator = new UserCookieGenerator();
+
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String habilitaIndex() {
 		return "index";
+
+	}
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String habilitaTelaDeLogin() {
+		return "telaLogin";
 
 	}
 
@@ -77,20 +128,33 @@ public class GrudController {
 	 
 	
 	@RequestMapping(value = "/grud/transacao/", method = RequestMethod.POST)
-	public String adionarTransacao(@Valid @ModelAttribute("transacao")Transacao transacao ,BindingResult result,@RequestParam(value = "cartao.id") Long idcartao) {
+	public String adionarTransacao(@Valid @ModelAttribute("transacao")Transacao transacao ,BindingResult result,@RequestParam(value = "cartao.id") Long idcartao,HttpServletRequest request) {
+		String status = "fail";
+		Long UserIdCookie = Long.valueOf(userCookieGenerator.readCookieValue(request));
+		System.out.println(UserIdCookie);
+		UserConnection userConnection = userConnectionDao.getUsuario(UserIdCookie);
+		User user = userDao.get(Long.valueOf(userConnection.getProviderUserId()));
 		if(result.hasFieldErrors()){
-			return "grud/cadTransacao";
-		}else{
-			transacao.setCartao(cartaodao.getCartao(idcartao));
-			Transacao t = transacao;
-			transacaoDao.persistir(t);
-			return "/index";
+			status="fail";
 		}
+			if (user!=null) {
+				System.out.println(user.getId());
+				System.out.println(userConnection.getProviderUserId());
+				if(user.getId().equals(Long.valueOf(userConnection.getProviderUserId()))){
+				transacao.setCartao(cartaodao.getCartao(idcartao));
+				transacao.setUser(user);
+				transacaoDao.persistir(transacao);
+				System.out.println("incluido");
+				status = "ok";
+				}
+			}
+		
+		return "redirect:/grud/transacao/?status="+status;
 	}
 	 
 	/* Inicio da parte da visualizacao */
 	
-	@RequestMapping(value = "/grud/show/*", method = RequestMethod.GET)
+	@RequestMapping(value = "/grud/show*", method = RequestMethod.GET)
 	public ModelAndView showCad(ModelMap modelmap){
 	    modelmap.addAttribute("alteraTransacao", new Transacao());
 	    ModelAndView mav = new ModelAndView();
@@ -110,13 +174,32 @@ public class GrudController {
 	}
 	
 	@RequestMapping(value = "/grud/show/lista/", method = RequestMethod.GET)
-	public @ResponseBody List<Transacao> list(@RequestParam(defaultValue = "1", value = "page", required = false) String page, @RequestParam(defaultValue = "10", value = "numero", required = false) Integer size) {
+	public @ResponseBody List<Transacao> list(@RequestParam(defaultValue = "1", value = "page", required = false) String page, @RequestParam(defaultValue = "10", value = "numero", required = false) Integer size,HttpServletRequest request) {
 		Long pageN = Long.valueOf(page)  ;
 		int firstResult = (int) ((page == null) ? 0 : (pageN - 1) * size);
-		List<Transacao> lista = transacaoDao.list(firstResult, size);
+		String userIdCookie = userCookieGenerator.readCookieValue(request);
+		UserConnection userConnection = userConnectionDao.getUsuario(Long.valueOf(userIdCookie));
+		userIdCookie=userConnection.getProviderUserId();
+		List<Transacao> lista = transacaoDao.list(firstResult, size,userIdCookie);
 		return lista;
 	} 
-
+	
+	
+	@RequestMapping(value = "/grud/abrastractSomaTotal", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Double> somasGerais(HttpServletRequest request){
+		String userIdCookie = userCookieGenerator.readCookieValue(request);
+		UserConnection userConnection = userConnectionDao.getUsuario(Long.valueOf(userIdCookie));
+		userIdCookie=userConnection.getProviderUserId();
+		Double valorReceita =transacaoDao.getValorReceita(userIdCookie).doubleValue();
+		Double valorDespesa =transacaoDao.getValorDespesas(userIdCookie).doubleValue();
+		Double valorTotal =valorReceita-valorDespesa;
+		Map<String,Double> resultado = new HashMap<String, Double>();
+		resultado.put("receitas", valorReceita);
+		resultado.put("despesas", valorDespesa);
+		resultado.put("total",valorTotal);
+		return resultado;
+	}
+	
 	/* Fim da parte da visualizacao */
 	
 	/*Começo da parte de alteraçao de transacao */

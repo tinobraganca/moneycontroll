@@ -29,6 +29,7 @@ import org.springframework.format.annotation.NumberFormat.Style;
 @Entity
 @Table(name = "transacao")
 public class Transacao {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true)
@@ -38,7 +39,7 @@ public class Transacao {
 	@NotEmpty
 	@Size(min = 2, message = "O nome não pode ter menos que 2 caracteres!")
 	@Valid
-	@Column(name = "descricao", length = 100, unique = true)
+	@Column(name = "descricao")
 	private String descricao;
 	
 //	@NotNull(message="deve por alguma Data!")
@@ -54,12 +55,16 @@ public class Transacao {
 //	@Pattern(regexp="^(0|[1-9][0-9]*)$",message = "o valor informado não e valido!!Exp: 221.00")
 	@Column(name = "valor")
 //	@Size(max=3, message="max 3")
-	private BigDecimal valor = BigDecimal.ZERO;
+	private BigDecimal valor;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "cartao_id")
 //	@JsonBackReference("cartao")
 	private Cartao cartao;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id")
+	private User user;
 	
 	@NumberFormat(style = Style.NUMBER)
 	@Column(name = "tipo")
@@ -117,6 +122,14 @@ public class Transacao {
 
 	public void setData(Calendar data) {
 		this.data = data;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }
